@@ -11,7 +11,9 @@ const register = catchAsync(async (req: Request, res: Response) => {
   const { ...registerData } = req.body;
   console.log(registerData);
 
-  registerData.password = await PasswordHelpers.passwordHash(registerData?.password);
+  registerData.password = await PasswordHelpers.passwordHash(
+    registerData?.password,
+  );
   const result = await AuthServices.register(registerData);
 
   //   res.send(result);
@@ -24,10 +26,15 @@ const register = catchAsync(async (req: Request, res: Response) => {
 });
 const login = catchAsync(async (req, res) => {
   //
-  const {...loginData } = req.body;
+  const { ...loginData } = req.body;
 
   const result = await AuthServices.login(loginData);
-  sendResponse
+  sendResponse<User>(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'User logged in successfully',
+    data: result,
+  });
 });
 const logout = catchAsync(async (req, res) => {
   //
