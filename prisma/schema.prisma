@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
@@ -13,11 +14,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  super_admin
+  admin
+  agent
+  customer
+}
+
 model User {
   id       Int    @id @default(autoincrement())
   username String @unique
   email    String @unique
   password String
+  role     Role
 
   @@map("users")
 }
