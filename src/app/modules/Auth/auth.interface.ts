@@ -1,12 +1,15 @@
+import { User } from '@prisma/client';
+
 export type ILoginUser = {
   email: string;
   password: string;
 };
 
 export type ILoginUserResponse = {
-  accessToken: string;
+  token: string;
   refreshToken?: string;
   isPasswordChangedRequired?: boolean;
+  user?: User | null;
 };
 
 export type IRefreshTokenResponse = {

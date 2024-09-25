@@ -18,15 +18,100 @@ enum Role {
   super_admin
   admin
   agent
-  customer
+  client
+}
+
+enum Gender {
+  male
+  female
+}
+
+model Permission {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @map("updated_at")
+  user_permission UserPermission[]
+
+  @@map("permissions")
+}
+
+model UserPermission {
+  permissionId Int @map("permission_id")
+  userId       Int @map("user_id")
+
+  user       User       @relation(fields: [userId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([userId, permissionId])
+  @@map("user_permissions")
 }
 
 model User {
   id       Int    @id @default(autoincrement())
-  username String @unique
   email    String @unique
   password String
   role     Role
 
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @map("updated_at")
+  user_permission UserPermission[]
+  profile         Profile?
+  agent           Agent?
+  Admin           Admin?
+
   @@map("users")
+}
+
+model Admin {
+  id                     Int      @id @default(autoincrement())
+  user                   User     @relation(fields: [userId], references: [id])
+  userId                 Int      @unique @map("user_id")
+  isPasswordResetRequire Boolean? @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("admins")
+}
+
+model Agent {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int      @unique
+  businessEmail String   @map("business_email")
+  officeAddress String   @map("office_address")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @map("updated_at")
+
+  @@map("agents")
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("clients")
+}
+
+model Profile {
+  id         Int    @id @default(autoincrement())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     Int    @unique
+  firstName  String @map("first_name")
+  middleName String @map("middle_name")
+  lastName   String @map("last_name")
+  bloodGroup String @map("blood_group")
+  address    String
+  contactNo  String @map("contact_no")
+  image      String
+  age        Int
+  gender     Gender
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("profiles")
 }

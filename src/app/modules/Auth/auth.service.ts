@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '@prisma/client';
 import { prisma } from '../../../libs/prisma';
 import AppError from '../../../errors/AppError';
@@ -8,12 +9,6 @@ import config from '../../../config';
 import { Secret } from 'jsonwebtoken';
 import { ILoginUser, ILoginUserResponse } from './auth.interface';
 
-/**
- * Authenticates a user by checking their email and password, and returns a JSON Web Token (JWT) access token and refresh token if the credentials are valid.
- *
- * @param {ILoginUser} payload - The user's email and password.
- * @return {ILoginUserResponse} An object containing the JWT access token and refresh token.
- */
 const login = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   //
   const isExist = await prisma.user.findUnique({
@@ -49,9 +44,14 @@ const login = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     config.jwt.refresh_expires_in as string,
   );
 
+  if (isExist?.password) {
+    delete (isExist as any)?.password;
+  }
+
   return {
-    accessToken,
+    token: accessToken,
     refreshToken,
+    user: isExist,
   };
 };
 
@@ -76,7 +76,7 @@ const register = async (payload: User): Promise<ILoginUserResponse> => {
   );
 
   return {
-    accessToken,
+    token: accessToken,
     refreshToken,
   };
 };
