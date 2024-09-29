@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
@@ -15,7 +9,7 @@ datasource db {
 }
 
 enum Role {
-  super_admin
+  superAdmin
   admin
   agent
   client
@@ -30,16 +24,16 @@ model Permission {
   id   Int    @id @default(autoincrement())
   name String @unique
 
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @default(now()) @map("updated_at")
-  user_permission UserPermission[]
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @default(now()) @map("updated_at")
+  userPermission UserPermission[]
 
   @@map("permissions")
 }
 
 model UserPermission {
-  permissionId Int @map("permission_id")
-  userId       Int @map("user_id")
+  permissionId Int
+  userId       Int
 
   user       User       @relation(fields: [userId], references: [id])
   permission Permission @relation(fields: [permissionId], references: [id])
@@ -54,12 +48,12 @@ model User {
   password String
   role     Role
 
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @default(now()) @map("updated_at")
-  user_permission UserPermission[]
-  profile         Profile?
-  agent           Agent?
-  Admin           Admin?
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @default(now()) @map("updated_at")
+  permissions UserPermission[]
+  profile     Profile?
+  agent       Agent?
+  Admin       Admin?
 
   @@map("users")
 }
@@ -67,11 +61,11 @@ model User {
 model Admin {
   id                     Int      @id @default(autoincrement())
   user                   User     @relation(fields: [userId], references: [id])
-  userId                 Int      @unique @map("user_id")
+  userId                 Int      @unique
   isPasswordResetRequire Boolean? @default(true)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@map("admins")
 }
@@ -80,38 +74,38 @@ model Agent {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [userId], references: [id])
   userId        Int      @unique
-  businessEmail String   @map("business_email")
-  officeAddress String   @map("office_address")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @default(now()) @map("updated_at")
+  businessEmail String
+  officeAddress String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 
   @@map("agents")
 }
 
 model Client {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@map("clients")
 }
 
 model Profile {
-  id         Int    @id @default(autoincrement())
-  user       User   @relation(fields: [userId], references: [id])
-  userId     Int    @unique
-  firstName  String @map("first_name")
-  middleName String @map("middle_name")
-  lastName   String @map("last_name")
-  bloodGroup String @map("blood_group")
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int     @unique
+  firstName  String
+  middleName String?
+  lastName   String
+  bloodGroup String?
   address    String
-  contactNo  String @map("contact_no")
-  image      String
+  contactNo  String
+  image      String?
   age        Int
   gender     Gender
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@map("profiles")
 }

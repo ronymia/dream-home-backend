@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { ErrorRequestHandler } from 'express';
 import { errorLogger } from '../../shared/logger';
 import { TErrorSources } from '../../interfaces/error';

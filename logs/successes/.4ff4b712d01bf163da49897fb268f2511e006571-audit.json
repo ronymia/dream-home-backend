@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\rony\\Desktop\\Resume\\dream-home-backend\\logs\\successes\\.4ff4b712d01bf163da49897fb268f2511e006571-audit.json",
+    "files": [
+        {
+            "date": 1727578130425,
+            "name": "C:\\Users\\rony\\Desktop\\Resume\\dream-home-backend\\logs\\successes\\2024-29-09-08-success.log",
+            "hash": "e6d437fb7b62900c21ea16c330e468afc6725f77f8973ee18d422337a52da235"
+        },
+        {
+            "date": 1727580429649,
+            "name": "C:\\Users\\rony\\Desktop\\Resume\\dream-home-backend\\logs\\successes\\2024-29-09-09-success.log",
+            "hash": "0e734ec2d372a2a392ae90f20efe353aa267da57a2820da4c2ae2359438d01b4"
+        }
+    ],
+    "hashType": "sha256"
+}

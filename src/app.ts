@@ -8,7 +8,7 @@ import config from './config';
 
 const app: Application = express();
 
-app.use(cors({ origin: config.client_url, credentials: true }));
+app.use(cors({ origin: config.live_site_url, credentials: true }));
 // app.use(cors());
 app.use(cookieParser());
 
