@@ -50,8 +50,8 @@ const getUserById = async (id: number) => {
 };
 
 //
-const updateUser = async (id: number, user: User) => {
-  const updatedUser = await prisma.user.update({
+const updateUser = async (id: number, user) => {
+  const updatedUser = await prisma.profile.update({
     where: {
       id,
     },
