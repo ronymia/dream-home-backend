@@ -5,10 +5,18 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routes from './app/routes';
 import notFoundRoute from './app/middlewares/notFoundRoute';
 import config from './config';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocs from './app/swagger';
 
 const app: Application = express();
 
-app.use(cors({ origin: config.live_site_url, credentials: true }));
+// CHECK CORS
+app.use(
+  cors({
+    origin: [config.frontend_url as string],
+    credentials: true,
+  }),
+);
 // app.use(cors());
 app.use(cookieParser());
 
@@ -17,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Application routes
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/v1', routes);
 
 //global error handler

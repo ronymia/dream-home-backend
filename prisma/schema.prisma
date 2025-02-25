@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -20,89 +20,35 @@ enum Gender {
   female
 }
 
-model Permission {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @default(now()) @map("updated_at")
-  userPermission UserPermission[]
-
-  @@map("permissions")
-}
-
-model UserPermission {
-  permissionId Int
-  userId       Int
-
-  user       User       @relation(fields: [userId], references: [id])
-  permission Permission @relation(fields: [permissionId], references: [id])
-
-  @@id([userId, permissionId])
-  @@map("user_permissions")
-}
-
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
   password String
   role     Role
+  profile  Profile?
 
-  createdAt   DateTime         @default(now()) @map("created_at")
-  updatedAt   DateTime         @default(now()) @map("updated_at")
-  permissions UserPermission[]
-  profile     Profile?
-  agent       Agent?
-  Admin       Admin?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@map("users")
 }
 
-model Admin {
-  id                     Int      @id @default(autoincrement())
-  user                   User     @relation(fields: [userId], references: [id])
-  userId                 Int      @unique
-  isPasswordResetRequire Boolean? @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@map("admins")
-}
-
-model Agent {
-  id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [userId], references: [id])
-  userId        Int      @unique
-  businessEmail String
-  officeAddress String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
-
-  @@map("agents")
-}
-
-model Client {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@map("clients")
-}
-
 model Profile {
-  id         Int     @id @default(autoincrement())
-  user       User    @relation(fields: [userId], references: [id])
-  userId     Int     @unique
-  firstName  String
-  middleName String?
-  lastName   String
-  bloodGroup String?
-  address    String
-  contactNo  String
-  image      String?
-  age        Int
-  gender     Gender
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String  @unique @db.ObjectId
+  user           User    @relation(fields: [userId], references: [id])
+  firstName      String
+  middleName     String?
+  lastName       String
+  bloodGroup     String?
+  address_line_1 String?
+  country        String?
+  postcode       String?
+  city           String?
+  contactNo      String
+  image          String?
+  age            Int
+  gender         Gender
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

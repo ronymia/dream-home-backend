@@ -6,9 +6,10 @@ import httpStatus from 'http-status';
 import { PasswordHelpers } from '../../../helpers/passwordHelpers';
 import { JwtHelpers } from '../../../helpers/jwtHelpers';
 import config from '../../../config';
-import { Secret } from 'jsonwebtoken';
+import { JwtPayload, Secret } from 'jsonwebtoken';
 import { ILoginUser, ILoginUserResponse } from './auth.interface';
 
+// LOGIN
 const login = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   //
   const isExist = await prisma.user.findUnique({
@@ -80,8 +81,21 @@ const register = async (payload: User): Promise<ILoginUserResponse> => {
     refreshToken,
   };
 };
-const logout = async (payload) => {
-  //
+
+// onAuthStateChange
+const onAuthStateChange = async (payload: JwtPayload): Promise<any> => {
+  const result = await prisma.user.findUnique({
+    where: { id: payload?.userId },
+  });
+
+  if (result) {
+    // Omit the password field from the result object
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = result;
+    return userWithoutPassword;
+  }
+
+  return null; // Return null if no user is found
 };
 
-export const AuthServices = { login, register, logout };
+export const AuthServices = { login, register, onAuthStateChange };

@@ -1,0 +1,19 @@
+{
+  "info": {
+    "title": "Dream Home",
+    "version": "1.0.0",
+    "description": "API documentation for dream home"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/v1"
+    }
+  ],
+  "swagger": "2.0",
+  "paths": {},
+  "definitions": {},
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": []
+}

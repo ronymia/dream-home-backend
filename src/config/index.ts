@@ -5,11 +5,11 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
   node_env: process.env.NODE_ENV,
-  live_site_url: process.env.LIVE_SITE_URL,
+  frontend_url: process.env.FRONTEND_URL,
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
-  default_student_pass: process.env.DEFAULT_STUDENT_PASS,
-  default_faculty_pass: process.env.DEFAULT_FACULTY_PASS,
+  default_customer_pass: process.env.DEFAULT_CUSTOMER_PASS,
+  default_agent_pass: process.env.DEFAULT_AGENT_PASS,
   default_admin_pass: process.env.DEFAULT_ADMIN_PASS,
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
   jwt: {

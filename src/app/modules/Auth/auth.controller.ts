@@ -7,6 +7,7 @@ import { ILoginUserResponse } from './auth.interface';
 import httpStatus from 'http-status';
 import { User } from '@prisma/client';
 import config from '../../../config';
+import { JwtPayload } from 'jsonwebtoken';
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const { ...registerData } = req.body;
@@ -25,7 +26,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-//login
+// LOGIN
 const login = catchAsync(async (req, res) => {
   const { ...loginData } = req.body;
 
@@ -33,7 +34,7 @@ const login = catchAsync(async (req, res) => {
 
   const { refreshToken, ...restResult } = result;
 
-  // set refresh token to cookie
+  // SET REFRESH TOKEN COOKIES
   const cookieOptions = {
     secure: config.node_env === 'development' ? false : true,
     httpOnly: true,
@@ -53,7 +54,32 @@ const login = catchAsync(async (req, res) => {
 
 // LOG OUT
 const logout = catchAsync(async (req, res) => {
+  // / SET REFRESH TOKEN TO COOKIE
+  const cookieOptions = {
+    secure: config.node_env === 'product',
+    httpOnly: true,
+  };
+  res.clearCookie('refreshToken', cookieOptions);
+
   //
+  sendResponse<any>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'user logout successfully',
+    data: 'success',
+  });
 });
 
-export const AuthControllers = { login, register, logout };
+// LOG OUT
+const onAuthStateChange = catchAsync(async (req, res) => {
+  const result = await AuthServices.onAuthStateChange(req?.user as JwtPayload);
+  // SEND RESPONSE
+  sendResponse<any>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'user information get successfully',
+    data: result,
+  });
+});
+
+export const AuthControllers = { login, register, logout, onAuthStateChange };
